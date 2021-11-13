@@ -1,16 +1,8 @@
-
-
+var modal;
 window.onload = function(){
 	document.getElementById('send').addEventListener( 'submit', sendForm );
+	var responser = document.getElementById('responser');
 }
-
-
-
-
-
-
-
-
 
 function sendForm( event ) {
 	console.log('entrou SendForm');
@@ -26,26 +18,7 @@ function sendForm( event ) {
 		
 	})
 	event.preventDefault();
-	
-/*	
-	
-	formData.forEach( (e, ) => console.log());
-	foreach()
-	let data = new URLSearchParams(formData);
-	loadFlags( "/showFlags?" + data.toString() ).then( data => {
-		map.clearOverlays();
-		data.forEach( (e) => addMarker(e));
-	});
-	
-*/	
 };
-
-
-
-
-
-
-
 
 async function postJson (url, req) {
 	let response = await fetch(url,{
@@ -65,15 +38,17 @@ async function postJson (url, req) {
 }
 
 function responseDelegator(response){
-	let responder = document.getElementById('responder');
+
+	if (modal === undefined)
+		modal =	new bootstrap.Modal(responser);
 	//Se existir e tiver algo, faça
 	if(response.title && response.title !== undefined)
-		responder.getElementsByClassName('modal-title')[0].innerHTML = response.title;
+		responser.getElementsByClassName('modal-title')[0].innerHTML = response.title;
 	if(response.message && response.message !== undefined)
-		responder.querySelector('.modal-body p')[0].innerHTML = response.message;
+		responser.querySelector('.modal-body p').innerHTML = response.message;
 	if(response.action && response.action !== undefined)
-		responder.querySelector('.modal-body p')[0].innerHTML = response.action;
-	responder.modal({'show':true});
+		responser.querySelector('.modal-body p').innerHTML = response.action;
+	modal.show();
 }
 
 
