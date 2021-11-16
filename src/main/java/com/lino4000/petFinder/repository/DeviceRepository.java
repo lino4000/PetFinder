@@ -5,5 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.lino4000.petFinder.model.Device;
 
 public interface DeviceRepository extends CrudRepository<Device, Long>{
+	
+	public Device findBySerial(String serial);
 
 }

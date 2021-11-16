@@ -9,7 +9,7 @@ import lombok.Value;
 @AllArgsConstructor
 public class DeviceReceiveLocation {
 	
-	public long latitude; 
-	public long longitude;
-	public long accuracy;
+	public double latitude; 
+	public double longitude;
+	public double accuracy;
 }
