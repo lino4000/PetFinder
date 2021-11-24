@@ -1,39 +1,54 @@
 <!doctype html>
-<html lang=en>
+<html lang="pt-br">
 	<head>
 		<meta charset=utf-8>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>PetFinder</title>
 		<link rel="stylesheet" href="/theme/style.css">
-		<link rel="shortcut icon" href="theme/favicon.png" />
+		<link rel="shortcut icon" href="/theme/favicon.png" />
+		<script type="text/javascript" src="/js/functions.js"></script>
 	</head>
 	<body class="login">
+		<div id="responser" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p></p>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="wrapper h-100 container-fluid">
 			<div class="row h-100 justify-content-center align-items-center">
 				<div class="login-form col">
 					<div class="logo">
 						<img src="/img/logo.png" />
 					</div>
-					<form>
+					<div th:if="${param.error != null}" class="alert alert-danger" role="alert">
+						<p class="bi bi-exclamation-triangle-fill m-0">[(${err})]</p>
+					</div>
+					<form th:action="@{/auth}" method="post">
 						<div class="mb-3">
 							<label for="login" class="form-label">Email ou usuário</label>
 							<span class="input-group-text bi bi-person-fill">
               </span>
-							<input type="text" class="form-control" id="login" aria-describedby="emailHelp">
+							<input type="text" tabindex="0" name="username" class="form-control" id="login" aria-describedby="emailHelp">
 						</div>
 						<div class="mb-3">
 							<label for="password" class="form-label">Senha</label>
 							<span class="input-group-text bi bi-key-fill">
               </span>
-							<input type="password" class="form-control" id="password">
+							<input type="password" class="form-control" id="password" name="password">
 						</div>
 						<div class="mb-3 hstack">
-							<a href="#" class="">Esqueci a senha</a>
-							<a href="#" class="ms-auto">Criar conta</a>
+							<a href="/register" class="ms-auto">Criar conta</a>
 						</div>
 						<button type="submit" class="btn btn-secondary w-100 text-light">Entrar</button>
 					</form>
-
 				</div>
 			</div>
 		</div>

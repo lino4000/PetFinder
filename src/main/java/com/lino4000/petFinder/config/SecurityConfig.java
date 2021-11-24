@@ -15,9 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 @Configuration
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-	@Bean
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    
+    @Bean
 	public PasswordEncoder passwordEncoder() {
 		Map<String, PasswordEncoder> encoders = new HashMap<>();  
 		
@@ -25,7 +25,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		return new DelegatingPasswordEncoder("argon2", encoders);
 	}
-
+    
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	if (!registry.hasMappingForPattern("/img/**")) {
     		registry.addResourceHandler("/img/**").addResourceLocations(
@@ -56,14 +56,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     protected void configure(HttpSecurity http) throws Exception {
         http
-	        .csrf()
-	        .ignoringAntMatchers("/nocsrf","/device/**")
+		        .csrf()
+		        .ignoringAntMatchers("/nocsrf","/device/**", "/logout")
 	        .and()
-	        .authorizeRequests()
-	        .antMatchers("/register").permitAll()
-	        .antMatchers(HttpMethod.POST,"/device/**").permitAll()
-	        .antMatchers(HttpMethod.GET,"/device/**").permitAll()
-	        .antMatchers(HttpMethod.PUT,"/device/**").permitAll()
-	        .anyRequest().authenticated();
+	        	.logout()
+	        	.logoutUrl("/logout")
+	        	.logoutSuccessUrl("/login")
+	        	.invalidateHttpSession(true)
+	        	.deleteCookies("JSESSIONID")
+            .and()
+            	.formLogin()
+            	.loginPage("/login")
+            	.loginProcessingUrl("/auth").permitAll()
+            	.defaultSuccessUrl("/dashboard/welcome")
+            .and()
+		        .authorizeRequests()
+		        .antMatchers("/register").permitAll()
+		        .antMatchers(HttpMethod.GET,"/device/**").permitAll()
+		        .antMatchers(HttpMethod.POST,"/device/**").permitAll()
+		        .antMatchers(HttpMethod.PUT,"/device/**").permitAll()
+	            .anyRequest().authenticated();
     }
 }

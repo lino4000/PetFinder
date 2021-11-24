@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Builder
 @Value
-public class AppResponse {
+public class GenericResponse {
 	
 	public String title;
 	public String message;

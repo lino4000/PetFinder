@@ -1,8 +1,8 @@
 package com.lino4000.petFinder.error;
 
-public class UserAlreadyExistException extends RuntimeException{
 
-	private static final long serialVersionUID = 5861310537366287163L;
+@SuppressWarnings("serial")
+public class UserAlreadyExistException extends RuntimeException{
 
     public UserAlreadyExistException() {
         super();

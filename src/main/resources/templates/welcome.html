@@ -1,13 +1,50 @@
 <!doctype html>
-<html lang=en>
+<html lang="pt-br">
 	<head>
 		<meta charset=utf-8>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>PetFinder</title>
 		<link rel="stylesheet" href="/theme/style.css">
-		<link rel="shortcut icon" href="theme/favicon.png" />
+		<link rel="shortcut icon" href="/theme/favicon.png" />
+		<script type="text/javascript" src="/js/functions.js"></script>
 	</head>
-	<body class="light welcome">
+	<body class="light dashboard welcome">
+		<div id="responser" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p class="comment"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Nova nome</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form class="json reload"  onsubmit="formModal.toggle();" th:action="@{device/serial/change-name}" th:object="${device}" method="post">
+							<div class="mb-3">
+								<label for="name" class="form-label">Nome do dispositivo</label>
+								<span class="input-group-text bi bi-pencil-square">
+								</span>
+								<input type="text" class="form-control" id="name" aria-describedby="nameHelp" th:field="*{name}" >
+							</div>
+							<div class="mb-3">
+								<input type="submit" class="btn btn-secondary w-100 text-light" value="Salvar alteração" />
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="wrapper h-100 container-flex">
 			<header class="row justify-content-center g-0">
 				<div class="logo py-5 text-center col">
@@ -15,12 +52,24 @@
 				</div>
 			</header>
 			<main class="container">
+			<div class="row my-3 justify-content-center align-items-center">
+					<nav aria-label="breadcrumb" class="hstack">
+						<ol class="breadcrumb p-2 rounded w-100">
+							<li class="breadcrumb-item">Dashboard</li>
+							<li class="breadcrumb-item active">Bem vindo</li>
+						</ol>
+						<form action="/logout" method="post" class="logout mx-3 mb-3">
+						<label for="logout" class="text-nowrap bi bi-box-arrow-right">Sair</label>
+							<input type="submit" id="logout" class="d-none" value="Sair" />
+						</form>
+					</nav>
+				</div>
 				<div class="row gy-4">
 					<div class="col col-12">
-						<div class="panel p-3 bg-light rounded">
+						<div id="alert" class="panel p-3 bg-light rounded">
 							<div class="panel-header">
 								<h2>Bem vindo!</h2>
-								<button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="panel"></button>
+								<button type="button" class="btn-close" aria-label="Close" data-target="#alert" data-bs-dismiss="alert"></button>
 							</div>
 							<div class="panel-body">
 								<p>Parabéns pela excelente aquisição!</p>
@@ -28,83 +77,41 @@
 						</div>
 					</div>
 					<div class="col col-12 col-sm-6">
-						<a href="#" class="btn btn-block btn-primary w-100 bg-light bi bi-person-circle" title="Configurações de conta">
+						<a href="/dashboard/account" class="btn btn-block btn-primary w-100 bg-light bi bi-person-circle" title="Configurações de conta">
 						</a>
 					</div>
 					<div class="col col-12 col-sm-6">
-						<a href="#" type="button" class="btn btn-block btn-primary w-100 bg-light bi bi-plus-square-dotted" title="Adicionar novo dispositivo">
+						<a href="/dashboard/adding" type="button" class="btn btn-block btn-primary w-100 bg-light bi bi-plus-square-dotted" title="Adicionar novo dispositivo">
 						</a>
 					</div>
 					<div class="col col-12">
 						<div class="devices">
 							<h2>Dispositivos</h2>
 							<div class="list-group">
+								 <!--/*/<th:block th:each="device : ${devices}"> /*/-->
 								<div class="list-group-item list-group-item-action function btn btn-primary  hstack gap-2" title="Dispositivo &quot;Cachorro&quot;">
-									<h4>Cachorro</h4>
+									<h4>[(${device.name})]</h4>
 									
-									<span class="icon rounded ms-auto">
+									<a th:href="@{device/}+${device.serial}+@{/finder}" class="icon rounded ms-auto">
 										<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
 											<path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
 										</svg>
-									</span>
+									</a>
 
-									<span class="icon rounded">
+									<a href="#" data-bs-toggle="modal" data-bs-target="#form-modal" th:data-bs-serial="${device.serial}" class="icon rounded">
 										<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
 											<path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
 											<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
 										</svg>
-									</span>
+									</a>
 									
-									<span class="icon rounded">
+									<a th:href="@{device/}+${device.serial}+@{/delete}" class="icon rounded">
 										<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
 											<path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
 										</svg>
-									</span>
+									</a>
 								</div>
-								<div class="list-group-item list-group-item-action function btn btn-primary  hstack gap-2" title="Dispositivo &quot;Gato&quot;">
-									<h4>Gato</h4>
-									
-									<span class="icon rounded ms-auto">
-										<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-											<path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
-										</svg>
-									</span>
-
-									<span class="icon rounded">
-										<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-											<path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-											<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-										</svg>
-									</span>
-									
-									<span class="icon rounded">
-										<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-											<path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-										</svg>
-									</span>
-								</div>
-								<div class="list-group-item list-group-item-action function btn btn-primary  hstack gap-2" title="Dispositivo &quot;Tartaruga&quot;">
-									<h4>Tartaruga</h4>
-									
-									<span class="icon rounded ms-auto">
-										<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-											<path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
-										</svg>
-									</span>
-
-									<span class="icon rounded">
-										<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-											<path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-											<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-										</svg>
-									</span>
-									
-									<span class="icon rounded">
-										<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-											<path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-										</svg>
-									</span>
-								</div>
+								<!--/*/</th:block> /*/-->
 							</div>
 						</div>
 					</div>

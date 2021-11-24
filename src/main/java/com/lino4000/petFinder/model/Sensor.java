@@ -2,10 +2,8 @@ package com.lino4000.petFinder.model;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -21,7 +19,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 @Builder
 @Data
@@ -29,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="sensors", uniqueConstraints = { @UniqueConstraint(columnNames = {"device_id", "type"}) })
+@SuppressWarnings("serial")
 public class Sensor implements Serializable{
 	
 	@Id @GeneratedValue

@@ -6,18 +6,18 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.lino4000.petFinder.dto.AppResponse;
+import com.lino4000.petFinder.dto.GenericResponse;
 import com.lino4000.petFinder.dto.RegisterRequest;
+import com.lino4000.petFinder.error.EmailAlreadyExistException;
 import com.lino4000.petFinder.error.UserAlreadyExistException;
-import com.lino4000.petFinder.model.User;
 import com.lino4000.petFinder.service.UserService;
 
 @Controller
@@ -29,6 +29,12 @@ public class PublicController {
 	@Autowired
     private MessageSource messages;
 	
+	@GetMapping("/login")
+	public String loginPage(ModelMap map) {
+		map.addAttribute("err", messages.getMessage("user.tryToLogin.failure", null, null ) );
+		return "login";
+	}
+	
 	@GetMapping("/register")
 	public String registerPage(@ModelAttribute("user") RegisterRequest registerRequest)	{
 	    return "register";
@@ -36,30 +42,37 @@ public class PublicController {
 
 	@PostMapping("/register")
 	@ResponseBody
-    public AppResponse registering(@RequestBody @Valid final RegisterRequest registerRequest, final HttpServletRequest request, final Errors errors) {
+    public GenericResponse registering(@RequestBody @Valid final RegisterRequest registerRequest, final HttpServletRequest request, final Errors errors) {
 		
         try {
         	
             userService.registerNewUser(registerRequest);
             
-        } catch (final UserAlreadyExistException uaeEx) {
+        } catch (final UserAlreadyExistException ex) {
         	
-            return AppResponse.builder()
-            		.title("Não Registrado!")
-            		.message( messages.getMessage("user.email.alreadExists", null, request.getLocale()) )
+            return GenericResponse.builder()
+            		.title( messages.getMessage("user.registration.failure", null, request.getLocale()) )
+            		.message( ex.getMessage() )
+            		.build();
+
+        } catch (final EmailAlreadyExistException ex) {
+        	
+            return GenericResponse.builder()
+            		.title( messages.getMessage("user.registration.failure", null, request.getLocale()) )
+            		.message( ex.getMessage() )
             		.build();
 
         } catch (final RuntimeException ex) {
         	
-            return AppResponse.builder()
-            		.title("Não Registrado!")
-            		.message( messages.getMessage("user.email.alreadExists", null, request.getLocale()) )
+            return GenericResponse.builder()
+            		.title( messages.getMessage("user.registration.failure", null, request.getLocale()) )
+            		.message( ex.getMessage() )
             		.build();
         }
         
-        return AppResponse.builder()
-        		.title("Registrado!")
-        		.message("Um email de confirmação foi enviado, mas já é possível acessar seu painel.")
+        return GenericResponse.builder()
+        		.title( messages.getMessage("user.registration.success.title", null, request.getLocale()) )
+        		.message( messages.getMessage("user.registration.success.message", null, request.getLocale()) )
         		.build();
     }
 

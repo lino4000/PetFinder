@@ -2,11 +2,11 @@ package com.lino4000.petFinder.model;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -25,12 +25,13 @@ import lombok.NonNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="users")
+@SuppressWarnings("serial")
 public class User implements Serializable{
 	
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	@Column(unique=true)
-	private String username;
+	public String username;
 	@NonNull
 	private String password;
 	@Column(unique=true) @NonNull
@@ -39,4 +40,5 @@ public class User implements Serializable{
 	@OneToMany(mappedBy="user")
 	@JsonManagedReference
 	private List<Device> devices;
+	
 }

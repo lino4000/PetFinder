@@ -1,50 +1,61 @@
 <!doctype html>
-<html lang=en>
+<html lang="pt-br">
 	<head>
 		<meta charset=utf-8>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>PetFinder</title>
 		<link rel="stylesheet" href="/theme/style.css">
-		<link rel="shortcut icon" href="theme/favicon.png" />
+		<link rel="shortcut icon" href="/theme/favicon.png" />
 		<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-	<script type="text/javascript">
+		<script type="text/javascript" src="/js/functions.js"></script>
+	<script type="text/javascript" th:inline="javascript">
 // This example creates a 2-pixel-wide red polyline showing the path of
 // the first trans-Pacific flight between Oakland, CA, and Brisbane,
 // Australia which was made by Charles Kingsford Smith.
 function initMap() {
+	/*<![CDATA[*/
   const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 15,
-    center: { lat: 37.772, lng: -122.214 },
+    zoom: 17,
+    center: { lat:/*[[${path[0].lat}]]*/ 0, lng:  /*[[${path[0].lng}]]*/ 0},
     mapTypeId: "terrain",
   });
-  const flightPlanCoordinates = [
-    { lat: 37.772, lng: -122.214 },
-    { lat: 21.291, lng: -157.821 },
-    { lat: -18.142, lng: 178.431 },
-    { lat: -27.467, lng: 153.027 },
-  ];
+  const flightPlanCoordinates = /*[[${path}]]*/ [];
   const flightPath = new google.maps.Polyline({
     path: flightPlanCoordinates,
     geodesic: true,
     strokeColor: "#FF0000",
     strokeOpacity: 1.0,
-    strokeWeight: 2,
+    strokeWeight: 3,
   });
 
   flightPath.setMap(map);
+	
+/*]]>*/
 }
 	</script>
 </head>
-	<body class="light welcome">
+	<body class="light finder">
 		<div class="wrapper h-100">
-			<header class="container ">
-				<div class="row justify-content-center g-0">
-					<div class="logo p-5 text-center col">
-						<img src="/img/logo.png" />
+			<header class="container mh-20 pt-3 pb-4">
+				<div class="row justify-content-center g-0 h-100">
+					<div class="mh-100 col col-1 hstack">
+						<div class="logo h-100 text-center me-5">
+								<img class="mh-100"  src="/img/logo.png" />
+						</div>
+						<nav aria-label="breadcrumb" class="vstack mt-auto">
+							<ol class="breadcrumb p-2 rounded">
+								<li class="breadcrumb-item"><a href="/dashboard/welcome">Dashboard</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Finder</li>
+							</ol>
+							<form action="/logout" method="post" class="logout ms-auto mx-3 mb-3">
+								<label for="logout" class="text-nowrap bi bi-box-arrow-right">Sair</label>
+								<input type="submit" id="logout" class="d-none" value="Sair" />
+							</form>
+						</nav>
 					</div>
 				</div>
 			</header>
-			<div id="map" class="h-100"></div>
+			<div id="map" class="h-100 rounded-top rounded-3"></div>
 
 			<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
 			<script

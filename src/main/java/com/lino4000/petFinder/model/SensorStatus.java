@@ -2,7 +2,6 @@ package com.lino4000.petFinder.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,7 +24,7 @@ import lombok.NonNull;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-
+@SuppressWarnings("serial")
 public class SensorStatus implements Serializable{
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)

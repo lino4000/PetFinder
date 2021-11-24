@@ -1,35 +1,58 @@
 var modal;
+var formModal;
+var formModalEl;
 window.onload = function(){
-	document.getElementById('send').addEventListener( 'submit', sendForm );
+	prepareForms();
 	var responser = document.getElementById('responser');
+	if (document.getElementById("info"))
+		tinymce.init({
+			selector: '#info',
+			language: 'pt_BR',
+		});
+	if (document.getElementById('login'))
+		document.getElementById('login').focus();
+
+	if (document.getElementById('form-modal')){
+		formModalEl = document.getElementById('form-modal');
+		formModal = new bootstrap.Modal(formModalEl);
+		formModalEl.addEventListener('show.bs.modal', function (event) {
+			t = event.relatedTarget;
+			let serial = t.getAttribute('data-bs-serial');
+			let url = formModalEl.querySelector('form.json').getAttribute('action');
+			console.log(serial);
+			console.log(url);
+			url = url.replace('serial',serial);
+			formModalEl.querySelector('form.json').setAttribute('action',url);
+		});
+	}
 }
 
 function sendForm( event ) {
-	console.log('entrou SendForm');
 	let formData = new FormData(event.target);
 	let url = event.target.action + '?';
 	url += '_csrf='+ formData.get('_csrf');
 	formData.delete('_csrf');
 	let fields = {};
 	formData.forEach((value, key) => fields[key] = value)
+	
+	if(event.target.classList.contains('reload'))
+		postJson(url, JSON.stringify(fields) ).then( response => {
+			responseDelegator(response, true);
+		})
+	else
+		postJson(url, JSON.stringify(fields) ).then( response => {
+			responseDelegator(response,false);
+		});
 
-	postJson(url, JSON.stringify(fields) ).then( response => {
-		responseDelegator(response);
-		
-	})
 	event.preventDefault();
 };
 
 async function postJson (url, req) {
 	let response = await fetch(url,{
 		method: 'post',
-//		credentials: 'include',
 		headers: {
 			'Content-Type': 'application/json',
 			'Accept': 'application/json'
-//			'Content-Length': req.length.toString(),
-//			'Accept-Encoding': 'gzip, deflate, br',
-//			'Connection': 'keep-alive'
 		},
 		body: req
 	});
@@ -37,7 +60,7 @@ async function postJson (url, req) {
 	return json;
 }
 
-function responseDelegator(response){
+function responseDelegator(response, reload){
 
 	if (modal === undefined)
 		modal =	new bootstrap.Modal(responser);
@@ -45,27 +68,16 @@ function responseDelegator(response){
 	if(response.title && response.title !== undefined)
 		responser.getElementsByClassName('modal-title')[0].innerHTML = response.title;
 	if(response.message && response.message !== undefined)
-		responser.querySelector('.modal-body p').innerHTML = response.message;
+		responser.querySelector('.modal-body p.comment').innerHTML = response.message;
 	if(response.action && response.action !== undefined)
-		responser.querySelector('.modal-body p').innerHTML = response.action;
+		responser.querySelector('.modal-body p.comment').innerHTML = response.action;
+	if (reload)
+		responser.addEventListener( 'hidden.bs.modal', function(){location.reload()} );
 	modal.show();
 }
 
-
-/*
-
-
-
-const userAction = async () => {
-  const response = await fetch('http://example.com/movies.json', {
-    method: 'POST',
-    body: myBody, // string or object
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-  const myJson = await response.json(); //extract JSON from the http response
-  // do something with myJson
+function prepareForms(){
+	document.querySelectorAll('form.json').forEach(
+		(e)=> e.addEventListener( 'submit', sendForm )
+	)
 }
-
-*/

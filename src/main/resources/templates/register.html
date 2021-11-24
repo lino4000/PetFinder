@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang=en>
+<html lang="pt-br">
 	<head>
 		<meta charset=utf-8>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,11 +13,11 @@
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">Modal title</h5>
+						<h5 class="modal-title"></h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<p>Modal body text goes here.</p>
+						<p></p>
 					</div>
 				</div>
 			</div>
@@ -28,7 +28,7 @@
 					<div class="logo">
 						<img src="/img/logo.png" />
 					</div>
-					<form id="send" th:action="@{/register}" th:object="${user}" method="post">
+					<form class="json" th:action="@{/register}" th:object="${user}" method="post">
 						<div class="mb-3">
 							<label for="user" class="form-label">Usuário</label>
 							<span class="input-group-text bi bi-person-fill">
@@ -55,8 +55,7 @@
 						</div>
 						<input type="submit" class="btn btn-secondary w-100 text-light" value="Criar" />
 						<div class="mb-3">
-							<a href="#" data-bs-toggle="modal" data-bs-target="#test">Voltar</a>
-							<p id="demo"></p>
+							<a href="/login">Voltar</a>
 						</div>
 					</form>
 				</div>

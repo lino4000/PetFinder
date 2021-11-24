@@ -2,7 +2,6 @@ package com.lino4000.petFinder.model;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,12 +26,14 @@ import lombok.NonNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="devices")
+@SuppressWarnings("serial")
 public class Device implements Serializable{
-	
+
 	@Id @GeneratedValue
 	private long id;
 	@Column(unique=true)
 	private String serial;
+	private String name;
 	@ManyToOne @NonNull
 	@JsonBackReference
 	private User user;
