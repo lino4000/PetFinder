@@ -31,7 +31,7 @@ public class PublicController {
 	
 	@GetMapping("/login")
 	public String loginPage(ModelMap map) {
-		map.addAttribute("err", messages.getMessage("user.tryToLogin.failure", null, null ) );
+		//map.addAttribute("err", messages.getMessage("user.tryToLogin.failure", null, null ) );
 		return "login";
 	}
 	

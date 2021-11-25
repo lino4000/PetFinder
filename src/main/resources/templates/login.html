@@ -29,7 +29,7 @@
 						<img src="/img/logo.png" />
 					</div>
 					<div th:if="${param.error != null}" class="alert alert-danger" role="alert">
-						<p class="bi bi-exclamation-triangle-fill m-0">[(${err})]</p>
+						<p class="bi bi-exclamation-triangle-fill m-0"></p>
 					</div>
 					<form th:action="@{/auth}" method="post">
 						<div class="mb-3">
