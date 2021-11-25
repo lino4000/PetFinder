@@ -9,6 +9,6 @@ import com.lino4000.petFinder.model.Device;
 public interface DeviceRepository extends CrudRepository<Device, Long>{
 	
 	public Optional<Device> findBySerial(String serial);
-	public void deleteDevice(Device device);
+//	public void deleteById(long id);
 
 }

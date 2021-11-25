@@ -84,11 +84,11 @@ public class DeviceService {
 	}
 	
     public boolean deleteDevice(String serial) {
-    	
+  /*  	
     	sensorStatusRepository.deleteAllBySerial(serial);
     	sensorRepository.deleteAllBySerial(serial);
     	deviceRepository.delete(deviceRepository.findBySerial(serial).get());
-    	
+    */	
     	return true;
     }		
 }
