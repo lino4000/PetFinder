@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-br">
+	<head>
+		<meta charset=utf-8>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>PetFinder</title>
+		<link rel="stylesheet" href="/theme/style.css">
+		<link rel="shortcut icon" href="/theme/favicon.png" />
+		<script type="text/javascript" src="/js/functions.js"></script>
+	</head>
+	<body class="dark dashboard add">
+		<div id="responser" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p class="comment"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<header class="container-flex">
+			<div class="row justify-content-center align-items-center g-0">
+				<div class="col-12 text-center logo pt-3 pb-4">
+					<img src="/img/logo.png" />
+				</div>
+			</div>
+		</header>
+		<main class="wrapper container">
+			<div class="row my-3 justify-content-center align-items-center">
+				<nav aria-label="breadcrumb" class="hstack">
+					<ol class="breadcrumb p-2 rounded w-100">
+						<li class="breadcrumb-item"><a href="/dashboard/welcome">Dashboard</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Novo Dispositivo</li>
+					</ol>
+					<form action="/logout" method="post" class="logout mx-3 mb-3">
+						<label for="logout" class="text-nowrap bi bi-box-arrow-right">Sair</label>
+						<input type="submit" id="logout" class="d-none" value="Sair" />
+					</form>
+				</nav>
+			</div>
+			<div class="row justify-content-center align-items-center mt-5">
+				<form class="json " th:action="@{/dashboard/device/add}" th:object="${device}" method="post">
+					<div class="mb-3">
+						<label for="serial" class="form-label">Serial</label>
+						<span class="input-group-text bi bi-upc-scan">
+						</span>
+						<input type="text" class="form-control" id="serial" aria-describedby="seriallHelp" th:field="*{serial}" th:value="${serial}?:''" required />
+					</div>
+					<div class="mb-3">
+						<label for="name" class="form-label">Nome</label>
+						<span class="input-group-text bi bi-pencil-square">
+						</span>
+						<input type="text" class="form-control" id="name" aria-describedby="namelHelp" th:field="*{name}" required />
+					</div>
+					<div class="my-5">
+						<input type="submit" class="btn btn-secondary w-100 text-light" value="Adicionar dispositivo" />
+					</div>
+				</form>
+			</div>
+		</main>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+	</body>
+</html>

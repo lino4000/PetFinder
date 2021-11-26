@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.lino4000.petFinder.dto.DeviceResponse;
 import com.lino4000.petFinder.dto.RegisterRequest;
 import com.lino4000.petFinder.error.DeviceNotFoundException;
 import com.lino4000.petFinder.error.EmailAlreadyExistException;
@@ -73,9 +74,9 @@ public class UserService implements UserDetailsService{
         
         userRepository.save(
     		User.builder()
-        	.username(registerRequest.getUsername())
-        	.password(passwordEncoder.encode(registerRequest.getPassword()))
-        	.email(registerRequest.getEmail())
+        	.username(notNull(registerRequest.getUsername()))
+        	.password(passwordEncoder.encode(notNull(registerRequest.getPassword())))
+        	.email(notNull(registerRequest.getEmail()))
         	.build()
     	);
         
@@ -90,7 +91,7 @@ public class UserService implements UserDetailsService{
     public boolean changeDeviceName(String serial, String name) {
     	Optional<Device> device = deviceRepository.findBySerial(serial);
     	device.orElseThrow(() -> new DeviceNotFoundException(messages.getMessage("user.device.notFound", null, null)));
-    	device.get().setName(name);
+    	device.get().setName(notNull(name));
     	deviceRepository.save(device.get());
     	return true;
     }
@@ -99,7 +100,7 @@ public class UserService implements UserDetailsService{
     public boolean changeUsername(String usernameOlder, String usernameNew) {
     	Optional<User> user = userRepository.findByUsername(usernameOlder);
     	user.orElseThrow(() -> new UsernameNotFoundException(messages.getMessage("user.username.notFound", null, null)));
-    	user.get().setUsername(usernameNew);
+    	user.get().setUsername(notNull(usernameNew));
     	userRepository.save(user.get());
     	return true;
     }
@@ -107,7 +108,7 @@ public class UserService implements UserDetailsService{
     public boolean changeEmail(String username, String email) {
     	Optional<User> user = userRepository.findByUsername(username);
     	user.orElseThrow(() -> new UsernameNotFoundException(messages.getMessage("user.username.notFound", null, null)));
-    	user.get().setEmail(email);
+    	user.get().setEmail(notNull(email));
     	userRepository.save(user.get());
     	return true;
     }
@@ -126,7 +127,7 @@ public class UserService implements UserDetailsService{
     	}
     	Optional<User> user = userRepository.findByUsername(username);
     	user.orElseThrow(() -> new UsernameNotFoundException(messages.getMessage("user.username.notFound", null, null)));
-    	user.get().setPassword(passwordEncoder.encode(p1));
+    	user.get().setPassword(passwordEncoder.encode(notNull(p1)));
     	userRepository.save(user.get());
     	return true;
     }
@@ -137,17 +138,40 @@ public class UserService implements UserDetailsService{
 		return user.get();
     }
     
+    public Device getDevice(String serial) {
+    	Optional<Device> device = deviceRepository.findBySerial(serial);
+    	return device.orElse(null);
+    }
+    
+    public DeviceResponse deviceToResponse(Device device) {
+    	return DeviceResponse.builder()
+    			.serial(device.getSerial().toString())
+    			.name(device.getName().toString())
+    			.build();
+    }
+    
     public void createVerificationTokenForUser(final User user, final String token) {
         final VerificationToken myToken = new VerificationToken(token, user);
         tokenRepository.save(myToken);
     }
-
+    
+    public boolean deleteUser(String username) {
+    	userRepository.deleteById(userRepository.findByUsername(username).get().getId());
+    	return true;
+    }
+    
     private boolean emailExists(String email) {
         return userRepository.existsByEmail(email);
     }
     
     private boolean usernameExists(String username) {
         return userRepository.existsByUsername(username);
+    }
+    
+    private String notNull(String str) {
+    	if (null == str | str.isBlank())
+    		throw new IllegalArgumentException(messages.getMessage("generic.field.failure",null,null));
+    	return str;
     }
 
 }

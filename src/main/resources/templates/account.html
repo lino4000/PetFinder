@@ -36,13 +36,13 @@
 								<label for="password1" class="form-label">Senha</label>
 								<span class="input-group-text bi bi-envelope-fill">
 								</span>
-								<input type="password" class="form-control" id="password1" aria-describedby="password1Help" th:field="*{password}" >
+								<input type="password" class="form-control" id="password1" aria-describedby="password1Help" th:field="*{password}" required />
 							</div>
 							<div class="mb-3">
 								<label for="password2" class="form-label">Confirmar senha</label>
 								<span class="input-group-text bi bi-envelope-fill">
 								</span>
-								<input type="password" class="form-control" id="password2" aria-describedby="password2Help" th:field="*{passwordConfirmation}" >
+								<input type="password" class="form-control" id="password2" aria-describedby="password2Help" th:field="*{passwordConfirmation}"  required />
 							</div>
 							<div class="mb-3">
 								<input type="submit" class="btn btn-secondary w-100 text-light" value="Salvar alteração" />
@@ -73,31 +73,31 @@
 				</nav>
 			</div>
 			<div class="row justify-content-center align-items-center">
-				<form class="json col-6" th:action="@{user/change-username}" th:object="${user}" method="post">
+				<form class="json col-6" th:action="@{/dashboard/user/change-username}" th:object="${user}" method="post">
 					<div class="mb-3">
 						<label for="user" class="form-label">Usuário</label>
 						<span class="input-group-text bi bi-person-fill">
 						</span>
-						<input type="text" class="form-control" id="user" aria-describedby="userlHelp" th:field="*{username}" th:value="${user.username}" />
+						<input type="text" class="form-control" id="user" aria-describedby="userlHelp" th:field="*{username}" th:value="${user.username}" required />
 					</div>
 					<div class="mb-3">
 						<input type="submit" class="btn btn-secondary w-100 text-light" value="Salvar alteraçãos" />
 					</div>
 				</form>
-				<form class="json col-6" th:action="@{user/change-email}" th:object="${user}" method="post">
+				<form class="json col-6" th:action="@{/dashboard/user/change-email}" th:object="${user}" method="post">
 					<div class="mb-3">
 						<label for="email" class="form-label">Email</label>
 						<span class="input-group-text bi bi-envelope-fill">
 						</span>
-						<input type="email" class="form-control" id="email" aria-describedby="emailHelp" th:field="*{email}" th:value="${user.email}" />
+						<input type="email" class="form-control" id="email" aria-describedby="emailHelp" th:field="*{email}" th:value="${user.email}" required />
 					</div>
 					<div class="mb-3">
 						<input type="submit" class="btn btn-secondary w-100 text-light" value="Salvar alteração" />
 					</div>
 				</form>
-				<form class="json col-12" th:action="@{user/change-info}" th:object="${user}" method="post">
+				<form class="tiny json col-12" th:action="@{/dashboard/user/change-info}" th:object="${user}" method="post">
 					<div class="mb-3">
-						<label for="info" class="form-label">Informações de contato</label>
+						<div class="hstack"><label for="info" class="form-label">Informações de contato</label><a href="/dashboard/view" target="_blank" class="bi bi-box-arrow-up-right ms-auto">Ver</a></div>
 						<textarea rows="9" cols="150" class="form-control" id="info" aria-describedby="infoHelp" th:field="*{info}">[(${user.info})]</textarea>
 					</div>
 					<div class="mb-3">
@@ -107,7 +107,7 @@
 				<div class="col-6">
 					<a href="#" class="btn btn-primary w-100 text-light" data-bs-toggle="modal" data-bs-target="#form-modal">Mudar senha</a>
 				</div>
-				<form class="col-6 json" th:action="@{user/delete-account}" th:object="${user}" method="post">
+				<form class="col-6 json reload" th:action="@{/dashboard/user/delete}" th:object="${user}" method="post">
 					<div class="my-3">
 						<input type="submit" class="btn btn-danger w-100 text-light" value="Deletar conta" />
 					</div>

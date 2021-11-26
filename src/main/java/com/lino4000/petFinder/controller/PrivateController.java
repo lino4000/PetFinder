@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lino4000.petFinder.dto.DeviceResponse;
@@ -57,8 +57,46 @@ public class PrivateController {
 				.build()
 		);
 		return "account";
-	}	
+	}
+
+	@GetMapping("/view")
+	public String viewDevice(Principal principal, ModelMap map)	{ 
+		map.addAttribute("info", userService.getUser(principal).getInfo());
+	    return "device";
+	}
 	
+	@GetMapping("/device/add")
+	public String deviceAdd(@RequestParam(required = false) String serial, ModelMap map, DeviceResponse device) {
+		map.addAttribute("serial", serial);
+		map.addAttribute("device", DeviceResponse.builder().build());
+		return "device-add";
+	}
+
+	@PostMapping("/device/add")
+	@ResponseBody
+	public GenericResponse deviceAdding(@RequestBody DeviceResponse device, Principal principal, final HttpServletRequest request) {
+        try {
+            deviceService.addDevice(device, principal.getName());
+        } catch (final IllegalArgumentException ex) {
+        	
+            return GenericResponse.builder()
+            		.title( messages.getMessage("generic.title.failure", null, request.getLocale()) )
+            		.message( ex.getMessage() )
+            		.build();
+	    } catch (final RuntimeException ex) {
+	    	
+	        return GenericResponse.builder()
+	        		.title( messages.getMessage("generic.title.failure", null, request.getLocale()) )
+	        		.message( messages.getMessage("generic.message.failure", null, request.getLocale()) )
+	        		.build();
+	    }
+        
+        return GenericResponse.builder()
+        		.title( messages.getMessage("generic.title.success", null, request.getLocale()) )
+        		.message( messages.getMessage("user.device.add.success", null, request.getLocale()))
+        		.build();
+	}
+
 	@GetMapping("/device/{serial}/finder")
 	public String getMapPage(@PathVariable("serial") String serial, ModelMap map) {
 		map.addAttribute("path", deviceService.getPath(serial));
@@ -70,6 +108,12 @@ public class PrivateController {
 	public GenericResponse changeDeviceName(@PathVariable("serial") String serial, @RequestBody DeviceResponse device,final HttpServletRequest request) {
         try {
             userService.changeDeviceName(serial, device.getName());
+        } catch (final IllegalArgumentException ex) {
+        	
+            return GenericResponse.builder()
+            		.title( messages.getMessage("generic.title.failure", null, request.getLocale()) )
+            		.message( ex.getMessage() )
+            		.build();
         } catch (final RuntimeException ex) {
         	
             return GenericResponse.builder()
@@ -79,16 +123,23 @@ public class PrivateController {
         }
         
         return GenericResponse.builder()
+        		.title( messages.getMessage("generic.title.success", null, request.getLocale()) )
         		.message( messages.getMessage("user.device.changeName.success", null, request.getLocale()))
         		.build();
 	}
 
-	@GetMapping("/device/{serial}/delete")
+	@PostMapping("/device/{serial}/delete")
 	@ResponseBody
 	public GenericResponse deleteDevice(@PathVariable("serial") String serial, final HttpServletRequest request) {
 		
         try {
             deviceService.deleteDevice(serial);
+        } catch (final IllegalArgumentException ex) {
+        	
+            return GenericResponse.builder()
+            		.title( messages.getMessage("generic.title.failure", null, request.getLocale()) )
+            		.message( ex.getMessage() )
+            		.build();
         } catch (final RuntimeException ex) {
         	
             return GenericResponse.builder()
@@ -98,6 +149,7 @@ public class PrivateController {
         }
         
         return GenericResponse.builder()
+        		.title( messages.getMessage("generic.title.success", null, request.getLocale()) )
         		.message( messages.getMessage("user.device.delete.success", null, request.getLocale()))
         		.build();
 	}
@@ -107,6 +159,12 @@ public class PrivateController {
 	public GenericResponse changeUsername( @RequestBody RegisterRequest user, Principal principal, final HttpServletRequest request) {
         try {
             userService.changeUsername(principal.getName(), user.getUsername());
+        } catch (final IllegalArgumentException ex) {
+        	
+            return GenericResponse.builder()
+            		.title( messages.getMessage("generic.title.failure", null, request.getLocale()) )
+            		.message( ex.getMessage() )
+            		.build();
         } catch (final RuntimeException ex) {
         	
             return GenericResponse.builder()
@@ -116,6 +174,7 @@ public class PrivateController {
         }
         
         return GenericResponse.builder()
+        		.title( messages.getMessage("generic.title.success", null, request.getLocale()) )
         		.message( messages.getMessage("user.changeUsername.success", null, request.getLocale()))
         		.build();
 		
@@ -126,6 +185,12 @@ public class PrivateController {
 	public GenericResponse changeEmail(@RequestBody RegisterRequest user, Principal principal, final HttpServletRequest request) {
         try {
             userService.changeEmail(principal.getName(), user.getEmail());
+        } catch (final IllegalArgumentException ex) {
+        	
+            return GenericResponse.builder()
+            		.title( messages.getMessage("generic.title.failure", null, request.getLocale()) )
+            		.message( ex.getMessage() )
+            		.build();
         } catch (final RuntimeException ex) {
         	
             return GenericResponse.builder()
@@ -135,13 +200,14 @@ public class PrivateController {
         }
         
         return GenericResponse.builder()
+        		.title( messages.getMessage("generic.title.success", null, request.getLocale()) )
         		.message( messages.getMessage("user.changeUsername.success", null, request.getLocale()))
         		.build();
 		
 	}
 	@PostMapping("/user/change-info")
 	@ResponseBody
-	public GenericResponse changeInfo(@RequestBody RegisterRequest user, Principal principal, final HttpServletRequest request) {
+	public GenericResponse changeInfo(@RequestBody User user, Principal principal, final HttpServletRequest request) {
         try {
             userService.changeInfo(principal.getName(), user.getInfo());
         } catch (final RuntimeException ex) {
@@ -153,6 +219,7 @@ public class PrivateController {
         }
         
         return GenericResponse.builder()
+        		.title( messages.getMessage("generic.title.success", null, request.getLocale()) )
         		.message( messages.getMessage("user.changeInfo.success", null, request.getLocale()))
         		.build();
 		
@@ -163,6 +230,12 @@ public class PrivateController {
 	public GenericResponse changePassword(@RequestBody RegisterRequest user, Principal principal, final HttpServletRequest request) {
         try {
             userService.changePassword(principal.getName(), user.getPassword(),user.getPasswordConfirmation());
+        } catch (final IllegalArgumentException ex) {
+        	
+            return GenericResponse.builder()
+            		.title( messages.getMessage("generic.title.failure", null, request.getLocale()) )
+            		.message( ex.getMessage() )
+            		.build();
         } catch (final RuntimeException ex) {
         	
             return GenericResponse.builder()
@@ -172,8 +245,30 @@ public class PrivateController {
         }
         
         return GenericResponse.builder()
+        		.title( messages.getMessage("generic.title.success", null, request.getLocale()) )
         		.message( messages.getMessage("user.changeInfo.success", null, request.getLocale()))
         		.build();
 		
 	}
+	
+	@PostMapping("/user/delete")
+	@ResponseBody
+	public GenericResponse deleteDevice(@RequestBody RegisterRequest user, Principal principal, final HttpServletRequest request) {
+		
+        try {
+            userService.deleteUser(principal.getName());
+        } catch (final RuntimeException ex) {
+        	
+            return GenericResponse.builder()
+            		.title( messages.getMessage("generic.title.failure", null, request.getLocale()) )
+            		.message( messages.getMessage("generic.message.failure", null, request.getLocale()) )
+            		.build();
+        }
+        
+        return GenericResponse.builder()
+        		.title( messages.getMessage("generic.title.success", null, request.getLocale()) )
+        		.message( messages.getMessage("user.delete.success", null, request.getLocale()) )
+        		.build();
+	}
+
 }

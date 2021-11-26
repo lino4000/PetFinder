@@ -29,6 +29,8 @@ window.onload = function(){
 
 function sendForm( event ) {
 	let formData = new FormData(event.target);
+	if( event.target.classList.contains('tiny') )
+		formData.set('info', tinymce.get('info').getContent());
 	let url = event.target.action + '?';
 	url += '_csrf='+ formData.get('_csrf');
 	formData.delete('_csrf');

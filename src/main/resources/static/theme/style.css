@@ -15692,7 +15692,7 @@ form.logout label:hover {
 #form-modal .form-label {
   color: #607ED2; }
 
-.login .wrapper, .register .wrapper {
+.login .wrapper, .register .wrapper, .dashboard.add .wrapper form {
   max-width: 310px;
   min-width: 240px; }
 
@@ -15801,7 +15801,8 @@ body.finder header.container {
 
 .devices .list-group-item .icon {
   border: 1px solid #728CD7;
-  padding: 5px; }
+  padding: 5px;
+  cursor: pointer; }
 
 .tox-notifications-container {
   display: none; }

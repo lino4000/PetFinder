@@ -3,6 +3,7 @@ package com.lino4000.petFinder.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,7 +38,7 @@ public class User implements Serializable{
 	@Column(unique=true) @NonNull
 	private String email;
 	private String info;
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user", cascade = CascadeType.REMOVE)
 	@JsonManagedReference
 	private List<Device> devices;
 	

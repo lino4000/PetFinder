@@ -1,4 +1,5 @@
-INSERT INTO USERS(ID,USERNAME, PASSWORD, EMAIL, INFO) VALUES (1, 'jose', '{argon2}$argon2id$v=19$m=4096,t=3,p=1$g71OMNqr3zXRYI+hwzgyXA$88TTNBgoVI3MhX12K/wN4OMrIM9su4EaE8cb9BCll2A', 'deratoy543@healteas.com', null);
+INSERT INTO USERS(ID,USERNAME, PASSWORD, EMAIL, INFO) VALUES (1, 'jose', '{argon2}$argon2id$v=19$m=4096,t=3,p=1$g71OMNqr3zXRYI+hwzgyXA$88TTNBgoVI3MhX12K/wN4OMrIM9su4EaE8cb9BCll2A', 'deratoy543@healteas.com', '<p style="text-align: center;"><strong>Esse animal possui dono.</strong></p>
+<p style="text-align: center;">Por favor ligue <strong>(xx)xxxx-xxxx</strong></p>');
 -- senha 1234
 INSERT INTO DEVICES(ID,SERIAL,NAME,USER_ID) VALUES (1,'1234','Ptolomeu',1);
 

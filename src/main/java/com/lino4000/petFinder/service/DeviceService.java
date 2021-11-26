@@ -10,18 +10,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lino4000.petFinder.dto.DeviceReceiveLocation;
+import com.lino4000.petFinder.dto.DeviceResponse;
 import com.lino4000.petFinder.dto.PathToGoogleMaps;
 import com.lino4000.petFinder.model.Device;
+import com.lino4000.petFinder.model.Sensor;
 import com.lino4000.petFinder.model.Sensor.SensorType;
 import com.lino4000.petFinder.model.SensorStatus;
 import com.lino4000.petFinder.repository.DeviceRepository;
 import com.lino4000.petFinder.repository.SensorRepository;
 import com.lino4000.petFinder.repository.SensorStatusRepository;
+import com.lino4000.petFinder.repository.UserRepository;
 
 @Service
 @Transactional
 public class DeviceService {
 
+	@Autowired
+	private UserRepository userRepository;
+	
 	@Autowired
 	private DeviceRepository deviceRepository;
 
@@ -30,7 +36,7 @@ public class DeviceService {
 
 	@Autowired
 	private SensorStatusRepository sensorStatusRepository;
-	
+
 	public DeviceReceiveLocation newLocation(String serial, DeviceReceiveLocation location) {
 		Device device = deviceRepository.findBySerial(serial).get();
 		SensorStatus statusLat = SensorStatus.builder()
@@ -84,11 +90,38 @@ public class DeviceService {
 	}
 	
     public boolean deleteDevice(String serial) {
-  /*  	
-    	sensorStatusRepository.deleteAllBySerial(serial);
-    	sensorRepository.deleteAllBySerial(serial);
-    	deviceRepository.delete(deviceRepository.findBySerial(serial).get());
-    */	
+    	deviceRepository.deleteById(deviceRepository.findBySerial(serial).get().getId());
     	return true;
-    }		
+    }
+    
+    public boolean addDevice(DeviceResponse deviceResponse, String username) {
+    	Device device = Device.builder()
+    			.serial(deviceResponse.getSerial())
+    			.name(deviceResponse.getName())
+    			.user(userRepository.findByUsername(username).get())
+    			.build();
+    	
+    	deviceRepository.save(device);
+    	sensorRepository.save(Sensor.builder()
+    			.device(device)
+    			.type(SensorType.LATITUDE)
+    			.build()
+    			);
+    	
+    	deviceRepository.save(device);
+    	sensorRepository.save(Sensor.builder()
+    			.device(device)
+    			.type(SensorType.LONGITUDE)
+    			.build()
+    			);
+    	deviceRepository.save(device);
+    	sensorRepository.save(Sensor.builder()
+    			.device(device)
+    			.type(SensorType.ACCURACY)
+    			.build()
+    			);
+    	
+    	return true;
+    }
+	
 }

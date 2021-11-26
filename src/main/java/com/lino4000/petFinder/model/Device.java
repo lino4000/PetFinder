@@ -3,9 +3,11 @@ package com.lino4000.petFinder.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -29,7 +31,7 @@ import lombok.NonNull;
 @SuppressWarnings("serial")
 public class Device implements Serializable{
 
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	@Column(unique=true)
 	private String serial;
@@ -37,7 +39,7 @@ public class Device implements Serializable{
 	@ManyToOne @NonNull
 	@JsonBackReference
 	private User user;
-	@OneToMany(mappedBy="device")
+	@OneToMany(mappedBy="device",cascade = CascadeType.REMOVE)
 	@JsonManagedReference
 	private List<Sensor> sensores;
 }

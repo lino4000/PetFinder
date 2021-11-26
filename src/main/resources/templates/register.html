@@ -33,25 +33,25 @@
 							<label for="user" class="form-label">Usuário</label>
 							<span class="input-group-text bi bi-person-fill">
               </span>
-							<input type="text" class="form-control" id="user" aria-describedby="userlHelp" th:field="*{username}" >
+							<input type="text" class="form-control" id="user" aria-describedby="userlHelp" th:field="*{username}" required>
 						</div>
 						<div class="mb-3">
 							<label for="email" class="form-label">Email</label>
 							<span class="input-group-text bi bi-envelope-fill">
               </span>
-							<input type="email" class="form-control" id="email" aria-describedby="emailHelp" th:field="*{email}">
+							<input type="email" class="form-control" id="email" aria-describedby="emailHelp" th:field="*{email}" required>
 						</div>
 						<div class="mb-3">
 							<label for="password1" class="form-label">Senha</label>
 							<span class="input-group-text bi bi-key-fill">
               </span>
-							<input type="password" class="form-control" id="password1" aria-describedby="password1Help" th:field="*{password}">
+							<input type="password" class="form-control" id="password1" aria-describedby="password1Help" th:field="*{password}" required>
 						</div>
 						<div class="mb-3">
 							<label for="password2" class="form-label">Confirmar senha</label>
 							<span class="input-group-text bi bi-key-fill">
               </span>
-							<input type="password" class="form-control" id="password2" aria-describedby="password2Help" th:field="*{passwordConfirmation}">
+							<input type="password" class="form-control" id="password2" aria-describedby="password2Help" th:field="*{passwordConfirmation}" required>
 						</div>
 						<input type="submit" class="btn btn-secondary w-100 text-light" value="Criar" />
 						<div class="mb-3">

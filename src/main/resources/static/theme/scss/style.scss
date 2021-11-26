@@ -66,7 +66,7 @@ form.logout{
 
 #form-modal .form-label{color:#607ED2}
 
-.login .wrapper, .register .wrapper{max-width: 310px;min-width: 240px;}
+.login .wrapper, .register .wrapper, .dashboard.add .wrapper form{max-width: 310px;min-width: 240px;}
 .dashboard main.container{max-width:680px;}
 .finder nav.vstack{flex:0 1 auto;}
 .finder header .col{width:355px;}
@@ -125,7 +125,7 @@ body.finder header.container{
 	& .list-group-item{padding: 0.5rem 0.5rem;}
 	& .list-group-item + .list-group-item{margin-top:10px;}
 	& .list-group-item h4{margin-bottom:0}
-	& .list-group-item .icon{border:1px solid #728CD7;padding:5px;}
+	& .list-group-item .icon{border:1px solid #728CD7;padding:5px;cursor: pointer;}
 }
 
 .tox-notifications-container{display:none}
