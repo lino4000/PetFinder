@@ -66,7 +66,7 @@
 				</div>
 				<div class="row gy-4">
 					<div class="col col-12">
-						<div id="alert" class="panel p-3 bg-light rounded">
+						<div id="alert" class="panel p-3 bg-light rounded alert fade show">
 							<div class="panel-header">
 								<h2>Bem vindo!</h2>
 								<button type="button" class="btn-close" aria-label="Close" data-target="#alert" data-bs-dismiss="alert"></button>
@@ -89,7 +89,7 @@
 							<h2>Dispositivos</h2>
 							<div class="list-group">
 								 <!--/*/<th:block th:each="device, status : ${devices}"> /*/-->
-								<div class="list-group-item list-group-item-action function btn btn-primary  hstack gap-2" th:title="#{Dispositivo &quot;}+${device.name}+#{&quot;}">
+								<div class="list-group-item list-group-item-action function btn btn-primary  hstack gap-2" th:title="'Dispositivo &quot;'+${device.name}+'&quot;'">
 									<h4>[(${device.name})]</h4>
 									
 									<a th:href="@{/dashboard/device/}+${device.serial}+@{/finder}" class="icon rounded ms-auto" title="Visualizar mapa">
