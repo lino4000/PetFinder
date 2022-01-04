@@ -4,7 +4,11 @@ Este é um projeto de TCC. O projeto consiste em rastrear animal doméstico a pa
 
 # Diagramas iniciais do projeto:
 
+## Diagrama de Casos de Uso
+
 ![Diagrama de Casos de Uso](https://i.imgur.com/cIMX8Kp.png "Diagrama de Casos de Uso")
+
+## Diagrama de Classe
 
 ![Diagrama de Classe](https://i.imgur.com/OmTPiNf.png "Diagrama de Classe")
 
